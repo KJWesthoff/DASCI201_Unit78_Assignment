@@ -1,0 +1,217 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 2.0 (February 7, 2023)
+%
+% This template originates from:
+% https://www.LaTeXTemplates.com
+%
+% Author:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+%
+% NOTE: The bibliography needs to be compiled using the biber engine.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+	letterpaper, % Paper size, use either a4paper or letterpaper
+	12pt, % Default font size, can also use 11pt or 12pt, although this is not recommended
+	unnumberedsections, % Comment to enable section numbering
+	twoside, % Two side traditional mode where headers and footers change between odd and even pages, comment this option to make them fixed
+]{LTJournalArticle}
+
+\addbibresource{bibliography.bib} % BibLaTeX bibliography file
+
+\runninghead{Research Design Review} % A shortened article title to appear in the running head, leave this command empty for no running head
+
+\footertext{\textit{Unit 08 Assignment} (MICS/DATSCI 201, Spring 2025)} % Text to appear in the footer, leave this command empty for no footer text
+
+\setcounter{page}{1} % The page number of the first page, set this to a higher number if the article is to be part of an issue or larger work
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\usepackage[title,toc,titletoc]{appendix}
+\usepackage{titlesec}
+\usepackage{lscape}
+\usepackage{fontawesome}
+
+
+\title{Research Design Review} % Article title, use manual lines breaks (\\) to beautify the layout}
+
+% Authors are listed in a comma-separated list with superscript numbers indicating affiliations
+% \thanks{} is used for any text that should be placed in a footnote on the first page, such as the corresponding author's email, journal acceptance dates, a copyright/license notice, keywords, etc
+\author{
+	Karl-Johan Westhoff \\
+	email \href{mailto:kjwesthoff@berkeley.edu}{kjwesthoff@berkeley.edu}
+}
+
+% Affiliations are output in the \date{} command
+\date{UC Berkeley School of Information \\
+MIDS Course 201 Spring 2025, Section 6 (Brooks Ambrose)
+}
+
+% % Full-width abstract
+% \renewcommand{\maketitlehookd}{%
+% 	\begin{abstract}
+% 		\noindent Lorem ipsum dolor sit amet,rta porttitor.
+% 	\end{abstract}
+% }
+
+%----------------------------------------------------------------------------------------
+\setcounter{tocdepth}{5}
+\setcounter{secnumdepth}{5}
+\usepackage[title]{appendix}
+
+\begin{document}
+\onecolumn
+\maketitle % Output the title section
+
+
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+
+\section*{Internal Memo, Content Moderation}
+Distribution list:
+
+
+
+
+
+\section*{Overview}
+Looking at content moderation beyond our own company, there are many organizations with similar challenges to ours. The purpose of content moderation is to ensure that the content complies with community guidelines. The guidelines be subdivided into parts:
+
+\begin{enumerate}[label=(\Alph*)]
+	\item Societal rules: Laws, standards and regulations
+	\item Malicious actors: Spam, unwanted commercial and political soliciting, forum hijacking, malware distribution
+	\item Social rules: Inappropriate content, Hate speech, Racism, Homophobia
+	\item Rules for our company: How do we want people to engage with each other, the debate 'tone', and handling influence, for example from competitors.
+\end{enumerate}
+
+Each part can be addressed individually and processed in parallel, and there are various solutions for handling both in-sourced and out-sourced f.ex. AWS\cite{AWS_contentModeration} offers a pay-per-post solution. The aim of this memo is to review the technologies that are available for content moderation and how we should measure effect. Who does it on which part is not part of the scope.
+
+
+\section{Potential solutions}
+
+\subsection{Automation, Machine Learning and AI}
+An overview of Machine Learning (ML) for content moderation was done by Chowdhury in \cite{StanfordPrimer}. Two automated techniques are used in the industry:
+\begin{itemize}
+	\item Matching models: Where content is compared (with various degree of similarity) against a database of known unwanted content. This is best for things that are clearly identifiable such as featured present in pictures, specific words and language, plagiarism etc.
+	\item Predicting models: Predicts the likelihood of a text or image violating a set of rules defined by the categories above. For example analyses a text to identify if the content violates a law.
+\end{itemize}
+
+Matching models can be considered raw filtering and especially applicable top (A) and (B) above. Predicting models is where the current development is focused.
+
+\subsubsection*{Features}
+\begin{itemize}
+	\item Can scale quickly as traffic increases and decreases on our forums
+	\item Machine Learning based content moderation has historically been prone to over filtering (false positives), with a hands-off approach, operators have erred towards "better catch too many than too few". However, this is a developing field and performance is expected to increase.
+	\item Using more advanced methods beyond ML such as Large Language Models (LLM's) on every forum post and thread is currently too expensive
+\end{itemize}
+
+\subsection{Human Moderators}
+Content moderation using people trained to precisely evaluate the content.
+\subsubsection*{Features}
+\begin{itemize}
+	\item Flexible evaluation capturing nuances
+	\item Immediate reaction to new things in society
+	\item Low initial cost, but requires more manpower
+	\item Scaling with forum traffic is slow, cost increases with increased traffic
+\end{itemize}
+
+
+
+\subsection{Hybrid Approach}
+Combining the approaches.
+
+\subsubsection*{Features}
+\begin{itemize}
+	\item Cost-efficient compared to a purely human approach
+	\item Can react quickly to new language, words and trends f.ex. in the hate speech landscape
+	\item Lets AI/ML do the parts it is good at, start with from 'Matching Models' and expand from there
+	\item More complex to implement and requires constant adjustment as automated processes can do more
+	\item Can transition from doing the content moderation itself to using domain knowledge for improving the automation
+\end{itemize}
+The hybrid approach seems to be the industry norm, Sircar et al. looked at the company 'X''s transparency report in \cite{ForbesXFindings}. The largest players in social media are increasing reliance on AI with some unexpected side effects, AI seems not yet be ready to do the work alone. "AI systems struggle to identify the full spectrum of harmful behaviors"\cite{ForbesXFindings}, training data are skewed to 'western' societies and misses hate speech from other cultures or over flags benign entries as hateful and does not understand sarcasm and 'secret language'\footnote{Like kids inventing their own language and expressions}.
+
+
+\section{Evaluation}
+
+\subsection{Trial Stage Evaluation}
+The purpose is to apply measurements of how good the proposed content moderation approaches above work prior to committing fully to a solution. In this case we do have a set of labeled data from our current content moderation which can serve as training and test data for evaluation of the effect of each solution.
+
+\subsubsection*{Trial Test Setup}
+\begin{itemize}
+	\item Run each solution with the test data
+	\item Evaluate each solution, especially for false negatives and false positives
+	\item Compare and review the solutions including cost of implementation and operation
+	      \begin{itemize}
+		      \item The possible future improvements to automated solutions should be evaluated and included
+		      \item The evaluation should be done as a pilot project as part of the research design
+	      \end{itemize}
+\end{itemize}
+
+\subsubsection*{Trial Metrics}
+Classical machine learning metrics\cite{ClarenceChio}ch.2:
+\begin{itemize}
+	\item Precision, How good did we predict, false positives
+	\item Recall, How good did we predict false negatives
+	\item F1 Score, combination of precision and recall
+\end{itemize}
+
+\subsection{Evaluation Post-Deployment}
+We can use the same Machine Learning metrics as for the trials by sampling data for bench marking as we go along. However, the criteria for what we consider inappropriate may change over especially for (D) above, this can be evaluated using surveys of customer satisfaction and usages statistics. Cost vs. efficiency of our content moderation should be evaluated periodically as new technology evolves.
+
+\subsubsection*{In Operation Metrics}
+\begin{itemize}
+	\item Sampling and ML analysis periodically
+	      \begin{itemize}
+		      \item Precision
+		      \item Recall
+		      \item F1 Score
+	      \end{itemize}
+	\item Customer satisfaction, will indirectly compare to the rest of the industry
+	\item Usage statistics, tied into business goals and performance metrics
+	\item Periodic evaluation of cost
+\end{itemize}
+
+
+
+
+\section{Conclusion}
+
+
+
+%----------------------------------------------------------------------------------------
+%	 REFERENCES
+%----------------------------------------------------------------------------------------
+\printbibliography % Output the bibliography
+%----------------------------------------------------------------------------------------
+
+
+
+%----------------------------------------------------------------------------------------
+%	 Appendices
+%----------------------------------------------------------------------------------------
+
+
+%\begin{appendices}
+%	\onecolumn
+%
+%	\section{Appendix}
+%
+%
+%\end{appendices}
+
+\end{document}
